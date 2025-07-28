@@ -1,3 +1,4 @@
+// controllers/messageController.js
 const Message = require('../models/Message');
 const { encryptMessage, decryptMessage } = require('../utils/encryption');
 const { responseBody } = require('../config/responseBody');
@@ -42,7 +43,9 @@ exports.getMessagesByAppointment = async (req, res) => {
   try {
     const { appointmentId } = req.params;
 
-    const messages = await Message.find({ appointmentId }).sort({ timestamp: 1 });
+    const messages = await Message.find({ appointmentId })
+      .sort({ timestamp: 1 })
+      .lean();
 
     const decryptedMessages = messages.map(msg => ({
       _id: msg._id,
@@ -64,7 +67,7 @@ exports.getMessagesByAppointment = async (req, res) => {
   }
 };
 
-// @desc    Delete a message (optional, admin only)
+// @desc    Delete a message (admin only)
 // @route   DELETE /api/messages/:messageId
 // @access  Admin
 exports.deleteMessage = async (req, res) => {

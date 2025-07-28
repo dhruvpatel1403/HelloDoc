@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { decodeToken } from '../../utils/decodeToken';
-import AppointmentList from './AppointmentList';
-import ChatBox from './ChatBox';
-import ChatHeader from './ChatHeader';
 import Sidebar from '../Patient/LeftSidebar';
 import TopNavBar from '../Patient/TopNavbar';
 import type { AppointmentType, MessageType } from './types';
+
+const AppointmentList = lazy(() => import('./AppointmentList'));
+const ChatBox = lazy(() => import('./ChatBox'));
+const ChatHeader = lazy(() => import('./ChatHeader'));
 
 const ChatLayout = () => {
   const [appointments, setAppointments] = useState<AppointmentType[]>([]);
@@ -92,23 +93,29 @@ const ChatLayout = () => {
         <main className="flex-1 p-0 h-[calc(100vh-4rem)] overflow-hidden">
           <div className="h-full w-full flex">
             {/* Appointment list */}
-            <AppointmentList
-              appointments={appointments}
-              active={activeAppointment}
-              onSelect={setActiveAppointment}
-              userId={userId}
-            />
+            <Suspense fallback={<div className="p-4">Loading appointments...</div>}>
+              <AppointmentList
+                appointments={appointments}
+                active={activeAppointment}
+                onSelect={setActiveAppointment}
+                userId={userId}
+              />
+            </Suspense>
 
             {/* Chat area */}
             <div className="flex flex-col flex-1 min-w-0">
-              <ChatHeader appointment={activeAppointment} userId={userId} />
+              <Suspense fallback={<div className="p-4">Loading chat header...</div>}>
+                <ChatHeader appointment={activeAppointment} userId={userId} />
+              </Suspense>
               <div className="flex-1 flex flex-col overflow-hidden">
-                <ChatBox
-                  appointment={activeAppointment}
-                  messages={messages}
-                  user={{ userId, role, token }}
-                  fetchMessages={fetchMessages}
-                />
+                <Suspense fallback={<div className="p-4">Loading chat messages...</div>}>
+                  <ChatBox
+                    appointment={activeAppointment}
+                    messages={messages}
+                    user={{ userId, role, token }}
+                    fetchMessages={fetchMessages}
+                  />
+                </Suspense>
               </div>
             </div>
           </div>

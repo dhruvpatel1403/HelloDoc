@@ -1,19 +1,20 @@
 import React from 'react';
-import doctor_2 from '../assets/doctor_2.jpg'; // Replace with actual image
+import doctor_2 from '../assets/doctor_2.jpg';
 
 const AboutSection: React.FC = () => {
   return (
     <section className="py-10 px-6 bg-white" id="about">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center max-w-7xl mx-auto">
-        {/* Left: Image */}
+        
         <div className="w-full flex justify-center mt-10 mb-10">
           <img
             src={doctor_2}
             alt="Doctors discussing"
             className="rounded-[2rem] w-full max-w-md object-cover"
+            loading="lazy" 
           />
         </div>
-        {/* Right: Text Content */}
+        
         <div className="text-center md:text-left">
           <h3 className="text-blue-600 font-semibold text-sm mb-2">About Us</h3>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 leading-snug mb-6">
